@@ -36,15 +36,18 @@ curvature = int(input())
 base_attack = 10
 damage = base_attack + strength * 1.5
 crit_damage = damage * 2
+stamina = health + ((strength + agility) / base_attack * crit_damage * curvature) * 0.5
 
 # --- Формуляр героя --------------------------------
 print("Характеристики героя:")
 print(f"Здоровье: {health}")
 print(f"Сила: {strength}")
-print(f"Накуренность: {agility}")
+print(f"Ловкость: {agility}")
+print(f"Накуренность: {curvature}")
 print()
 print(f"Урон героя: {damage:.1f}")
 print(f"Критический урон: {crit_damage:.1f}")
+print(f"Стамина: {stamina}")
 
 # --- Меню действий ---------------------------------
 print("Что делаешь?")
@@ -55,11 +58,32 @@ print("4 - разглядеть наркомана")
 print("5 - курнуть")
 print()
 
-# --- Выбор героя -----------------------------------
+# --- Выбор действия --------------------------------
 choice = input()
+match choice:
+    case "1":
+        print("Вы осмотрелись. Переулок тих и тёмен.")
+    case "2":
+        stamina = stamina - 4
+        print("Вы осторожно идёте вперёд. Шприцы ломаются под ногами.")
+    case "3":
+        stamina = stamina + 2
+        print("Вы садитесь у стены, предварительно ботинком отодвинув бычки от косяков")
+    case "4":
+        print("Наркоман лежит без сознания, только кальян тихо булькает рядом.")
+    case "5":
+        curvature = curvature + 2
+        print("Ваше сознание медленно мутнеет, а перед глазами начинают прыгать радужные котики.")
+    case _:
+        print("Такого действия нет.")
+
+# --- Строка состояния ---------------------------------------
+print()
+print(f"Здоровье: {health}   Запас сил: {stamina}")
 
 # --- Прощание ---------------------------------------
 print()
 print(frame)
 print(f"Удачи, {hero_name}!")
 print(frame)
+
