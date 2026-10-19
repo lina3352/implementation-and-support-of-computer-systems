@@ -9,6 +9,8 @@
 # его будем на третьем занятии.
 # ================================================
 
+import random
+
 # --- Заголовок ------------------------------------
 title = "ПИТЕРСКИЕ ПОДВОРОТНИ"
 frame = "=" * 22
@@ -68,7 +70,9 @@ print(f"Стамина: {stamina}")
 # --- Главный цикл игры -----------------------------
 running = True
 actions = 0
-menu_last = 6
+menu_last = 7
+enemies = ["гопник", "бродячий пёс", "алкаш", "дилер"]
+log = []
 outcome = "прерывание"
 try:
     while running:
@@ -81,6 +85,7 @@ try:
         print("4 - разглядеть наркомана")
         print("5 - курнуть")
         print("6 - тренировка")
+        print("7 - зайти глубже")
         print("0 - выйти из подворотни")
         print()
 
@@ -149,6 +154,37 @@ try:
                 print(f"Общий урон: {total_damage:.1f}")
                 print(f"Средний урон: {total_damage / strikes:.1f}")
                 print(f"Стоимость тренировки: {training_cost} сил")
+            case "7":
+                if not enemies:
+                    print("Вы заходите глубже во дворы, но там пусто: врагов не осталось.")
+                else:
+                    enemy = random.choice(enemies)
+                    enemy_hp = 45
+                    round_n = 0
+                    print(f"Вы заходите глубже во дворы. Из темноты выходит {enemy}!")
+                    while enemy_hp > 0 and health > 0:
+                        round_n += 1
+                        if round_n % 3 == 0:
+                            hit_damage = crit_damage
+                            hit_end = " — критический!"
+                        else:
+                            hit_damage = damage
+                            hit_end = "."
+                        enemy_hp -= hit_damage
+                        enemy_damage = 0
+                        if enemy_hp <= 0:
+                            print(f"Раунд {round_n}: вы наносите {hit_damage:.1f} урона{hit_end} Враг падает.")
+                        else:
+                            enemy_damage = random.randint(2, 6)
+                            health -= enemy_damage
+                            print(f"Раунд {round_n}: вы наносите {hit_damage:.1f} урона{hit_end} "
+                                  f"Здоровье врага: {enemy_hp:.1f}. {enemy.capitalize()} бьёт в ответ на {enemy_damage}.")
+                        log.append(f"раунд {round_n}: герой {hit_damage:.1f}, враг {enemy_damage}")
+                    if enemy_hp <= 0:
+                        enemies.remove(enemy)
+                        print(f"{enemy.capitalize()} повержен! Врагов в подворотне осталось: {len(enemies)}.")
+                    print(f"Раундов в бою: {round_n}.")
+                    print(f"Последняя запись журнала: {log[-1]}")
             case "0":
                 print("Вы выходите из подворотни на шумную улицу. Сырость и запах травы остаются позади.")
                 running = False
@@ -160,7 +196,7 @@ try:
         if running:
             actions += 1
         print()
-        print(f"Здоровье: {health}   Запас сил: {stamina}")
+        print(f"Здоровье: {health}   Запас сил: {stamina}   Врагов осталось: {len(enemies)}")
 
         # --- Проверка гибели ---------------------------------------
         if health <= 0:
